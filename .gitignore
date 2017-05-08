@@ -1,0 +1,15 @@
+#Ignore all
+*
+
+#Not these
+!.gitIgnore
+
+!src
+!src/
+!src/**
+
+!*.jar
+
+!PPMImage
+!PPMImage/
+!PPMImage/**
