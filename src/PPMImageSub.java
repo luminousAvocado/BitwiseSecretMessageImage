@@ -1,4 +1,6 @@
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.scene.image.Image;
 
@@ -18,19 +20,6 @@ public class PPMImageSub extends PPMImage{
 	*/
 	public void hideMessage(String message){
 		
-		/*
-		char tempChar = message.charAt(0);
-		int tempInt = (int) tempChar;
-		
-		System.out.println("char: " + tempChar);
-		System.out.println("int: " + tempInt);
-		
-		for(int index = 1; index < 9; index++){
-			char mask = (char) (1 << (index - 1));
-			System.out.println("mask: " + mask + ", " + (int)mask);
-			System.out.println("At: " + index + " , " + (tempChar & mask));
-		}
-		*/
 		int pixelDataCounter = 0; // Used to keep track of origPixelData[index]
 		
 		// Outer loop goes through each char in String
@@ -60,13 +49,6 @@ public class PPMImageSub extends PPMImage{
 		}
 		
 		this.writeImage("hiddenMsg.ppm");
-		
-		/*// This will print the least sig bit in each char in the array up to however far up the array we went
-		for(int counter = 0; counter < pixelDataCounter; counter++){
-			char testMask = (char) (1 << (1 - 1));
-			System.out.println(origPixelData[counter] & testMask);
-		}
-		*/
 	}
 	
 	
@@ -74,8 +56,37 @@ public class PPMImageSub extends PPMImage{
 	 * Recovers a string from an image
 	*/
 	public String recoverMessage(){
+	
+		StringBuilder byteString = new StringBuilder();
+		StringBuilder finalString = new StringBuilder();
+		int pixelCounter = 0;
 		
+		// Continues till reaches null char '\0' (00000000)
+		while(true){
+			char mask = (char) (1 << (1 - 1));
+			int bitStatus = (origPixelData[pixelCounter] & mask);
+			pixelCounter++;
+	
+			if(bitStatus > 0){
+				byteString.append("1");
+			}
+			else if(bitStatus == 0){
+				byteString.append("0");
+			}
+
+			if(byteString.toString().compareTo("00000000") == 0){
+				break;
+			}
+			
+			if(byteString.length() == 8){
+				int intOfByte = Integer.parseInt(byteString.toString(), 2); // Take the String of 8 bits and parse to int, which gives the ASCII code
+				char temp = (char) intOfByte; // Case that int (ASCII code) to char, which gives corresponding char
+				finalString.append(temp); // Add this char to our final string
+				byteString.delete(0, byteString.length());
+			}
+		}
 		
+		return finalString.toString();
 	}
 	
 	

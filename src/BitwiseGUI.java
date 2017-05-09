@@ -17,6 +17,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -88,7 +91,17 @@ public class BitwiseGUI extends Application{
 				
 				String inputString = JOptionPane.showInputDialog("Enter message to hide:");
 				
-				PPMImageHide.hideMessage(inputString);
+				char[] msgArray = inputString.toCharArray(); // Convert inputString to array of chars
+				
+				char[] charArray = new char[msgArray.length + 1]; // Copy array of chars to new array with + 1 length
+				for(int index = 0; index < charArray.length - 1; index++){
+					charArray[index] = msgArray[index];
+				}
+				charArray[charArray.length - 1] = '\0'; // Add null terminating char as last array[index]
+
+				String finalString = new String(charArray); // Convert char array back into string
+				
+				PPMImageHide.hideMessage(finalString); // Hides message and writes to new file
 			});
 			
 			
@@ -98,8 +111,13 @@ public class BitwiseGUI extends Application{
 				PPMImageSub PPMImageRecover = new PPMImageSub(this.inputFile);
 				
 				String recoveredMsg = PPMImageRecover.recoverMessage();
+
+				Text textBox = new Text(recoveredMsg);
+				textBox.setFont(Font.font("Heletica", 25));
+				textBox.setFill(Color.WHITE);
+				bPane.setAlignment(textBox, Pos.CENTER);
 				
-				
+				bPane.setRight(textBox);
 			});
 			
 			
