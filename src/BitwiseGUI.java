@@ -3,6 +3,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
@@ -10,11 +11,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 
@@ -43,9 +46,11 @@ public class BitwiseGUI extends Application{
 			topHBox.getChildren().addAll(loadFile, hideMessage, recoverMessage, greyscale, sepia, negative);
 			topHBox.setPadding(new Insets(5, 5, 5, 5));
 			topHBox.setSpacing(3);
-			topHBox.setStyle("-fx-background-color: blue");
+			topHBox.setStyle("-fx-background-color: grey");
 			topHBox.setAlignment(Pos.CENTER);
 			bPane.setTop(topHBox);
+			bPane.setPadding(new Insets(0, 5, 0, 5));
+			bPane.setStyle("-fx-background-color: black");
 			
 			
 			
@@ -64,14 +69,37 @@ public class BitwiseGUI extends Application{
 				try {
 					Image origImage = SwingFXUtils.toFXImage(ImageIO.read(this.inputFile), null);
 					ImageView imageView = new ImageView(origImage);
-					imageView.setFitWidth(750); // Resize image width
+					imageView.setFitWidth(744); // Resize image width
 					imageView.setFitHeight(900); // Resize image height
 					imageView.setPreserveRatio(true); // Preserves ratio
 					imageView.setSmooth(true); // true for higher quality filtering when resize
+					bPane.setAlignment(imageView, Pos.CENTER);
 					bPane.setLeft(imageView);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+			});
+			
+			
+			// Handles "Hide Message" button
+			hideMessage.setOnAction(e -> {
+				
+				PPMImageSub PPMImageHide = new PPMImageSub(this.inputFile);
+				
+				String inputString = JOptionPane.showInputDialog("Enter message to hide:");
+				
+				PPMImageHide.hideMessage(inputString);
+			});
+			
+			
+			// Handles "Recover Message" button
+			recoverMessage.setOnAction(e -> {
+				
+				PPMImageSub PPMImageRecover = new PPMImageSub(this.inputFile);
+				
+				String recoveredMsg = PPMImageRecover.recoverMessage();
+				
+				
 			});
 			
 			
@@ -85,10 +113,11 @@ public class BitwiseGUI extends Application{
 				try {
 					Image greyImage = SwingFXUtils.toFXImage(ImageIO.read(greyFile), null);
 					ImageView imageView = new ImageView(greyImage);
-					imageView.setFitWidth(750); // Resize image width
-					imageView.setFitHeight(900); // Resize image height
-					imageView.setPreserveRatio(true); // Preserves ratio
-					imageView.setSmooth(true); // true for higher quality filtering when resize
+					imageView.setFitWidth(744);
+					imageView.setFitHeight(900);
+					imageView.setPreserveRatio(true);
+					imageView.setSmooth(true);
+					bPane.setAlignment(imageView, Pos.CENTER);
 					bPane.setRight(imageView);
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -106,10 +135,11 @@ public class BitwiseGUI extends Application{
 				try{
 					Image sepiaImage = SwingFXUtils.toFXImage(ImageIO.read(sepiaFile), null);
 					ImageView imageView = new ImageView(sepiaImage);
-					imageView.setFitWidth(750);
+					imageView.setFitWidth(744);
 					imageView.setFitHeight(900);
 					imageView.setPreserveRatio(true);
 					imageView.setSmooth(true);
+					bPane.setAlignment(imageView, Pos.CENTER);
 					bPane.setRight(imageView);
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -127,10 +157,11 @@ public class BitwiseGUI extends Application{
 				try{
 					Image negImage = SwingFXUtils.toFXImage(ImageIO.read(negFile), null);
 					ImageView imageView = new ImageView(negImage);
-					imageView.setFitWidth(750);
+					imageView.setFitWidth(744);
 					imageView.setFitHeight(900);
 					imageView.setPreserveRatio(true);
 					imageView.setSmooth(true);
+					bPane.setAlignment(imageView, Pos.CENTER);
 					bPane.setRight(imageView);
 				} catch (IOException e1) {
 					e1.printStackTrace();
